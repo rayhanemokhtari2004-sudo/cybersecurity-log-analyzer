@@ -1,0 +1,9 @@
+Aug 14 10:00:01 server sshd[1001]: Accepted password for admin from 192.168.1.10 port 50120 ssh2
+Aug 14 10:05:12 server sshd[1002]: Failed password for admin from 192.168.1.20 port 50121 ssh2
+Aug 14 10:05:18 server sshd[1003]: Failed password for admin from 192.168.1.20 port 50122 ssh2
+Aug 14 10:05:25 server sshd[1004]: Failed password for admin from 192.168.1.20 port 50123 ssh2
+Aug 14 10:05:31 server sshd[1005]: Failed password for admin from 192.168.1.20 port 50124 ssh2
+Aug 14 10:05:40 server sshd[1006]: Failed password for admin from 192.168.1.20 port 50125 ssh2
+Aug 14 10:10:15 server sshd[1007]: Accepted password for user1 from 192.168.1.30 port 50126 ssh2
+Aug 14 10:15:20 server sshd[1008]: Failed password for root from 192.168.1.50 port 50127 ssh2
+Aug 14 10:20:30 server sshd[1009]: Failed password for root from 192.168.1.50 port 50128 ssh2

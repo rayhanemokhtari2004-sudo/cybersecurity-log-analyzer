@@ -1,5 +1,9 @@
-import re 
-LOG_FILE= "data/auth.log"
+import re
+import sqlite3
+
+LOG_FILE = "data/auth.log"
+DB_FILE = "database/security_logs.db"
+
 
 def parse_log_line(line):
     pattern = (
@@ -9,9 +13,12 @@ def parse_log_line(line):
         r"(?P<ip>\S+) port "
         r"(?P<port>\d+)"
     )
-    match=re.search(pattern, line)   
+
+    match = re.search(pattern, line)
+
     if not match:
         return None
+
     status = "SUCCESS" if "Accepted password" in line else "FAILED"
 
     return {
@@ -21,6 +28,8 @@ def parse_log_line(line):
         "port": int(match.group("port")),
         "status": status
     }
+
+
 def read_logs():
     events = []
 
@@ -34,8 +43,38 @@ def read_logs():
     return events
 
 
+def save_logs_to_database(logs):
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+
+    for log in logs:
+        cursor.execute("""
+            INSERT INTO logs (
+                timestamp,
+                username,
+                ip,
+                port,
+                status
+            )
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            log["timestamp"],
+            log["username"],
+            log["ip"],
+            log["port"],
+            log["status"]
+        ))
+
+    conn.commit()
+    conn.close()
+
+    print(f"{len(logs)} logs saved to database.")
+
+
 if __name__ == "__main__":
     logs = read_logs()
 
     for log in logs:
-        print(log)    
+        print(log)
+
+    save_logs_to_database(logs)

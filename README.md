@@ -49,3 +49,25 @@ Alertes de sécurité (alerts.py)
    |
    v
 Tableau de bord Cyber Sentinel (dashboard/app.py)
+## les commandes essentielles 
+# Cloner le projet
+git clone <URL_DU_REPO>
+cd cybersecurity-log-analyzer
+
+# Créer l'environnement virtuel
+python -m venv venv
+
+# Activer l'environnement sous Windows
+venv\Scripts\activate
+
+# Installer les dépendances
+pip install -r requirements.txt
+
+# Lancer l'analyse de sécurité
+python main.py
+
+# Lancer le dashboard
+python -m streamlit run dashboard/app.py
+
+# Exécuter les tests
+pytest -v

@@ -1,96 +1,51 @@
-# CYBER SENTINEL — SSH Threat Detection & Security Monitoring
+# CYBER SENTINEL — Détection des menaces SSH et supervision de la sécurité
 
-Cyber Sentinel is a lightweight Security Operations Center (SOC) dashboard and backend engine designed to analyze Linux/SSH authentication logs (`auth.log`), detect brute force attacks in real-time using a sliding window algorithm, calculate dynamic IP risk scores, and present security insights via an interactive dark-mode dashboard.
-
----
-
-## 🎯 Features
-
-- **SSH Authentication Log Parsing**: Extracts success, failure, and invalid user login events with port and IP metadata.
-- **Idempotent SQLite Database Storage**: Guarantees zero duplicate logs or alerts across repeated executions.
-- **Dynamic Risk Scoring Engine**: Evaluates threat levels (LOW, MEDIUM, HIGH, CRITICAL) per IP based on failed login attempt counts.
-- **Sliding Window Brute Force Detection**: Evaluates 5-minute time windows ($\ge 5$ failed attempts) to trigger immediate security alerts.
-- **Interactive SOC Dashboard**: Cyber dark-mode single-page interface powered by Streamlit and Plotly.
-- **IP Deep Investigation**: Interactive dropdown for granular IP-level security assessment and timeline inspection.
-- **Log Explorer**: Structured log table with multi-criteria real-time filtering (IP, Username, Status).
-- **Unit Test Suite**: Full test coverage with `pytest` for parsing, risk scoring, sliding window detection, and database idempotency.
+Cyber Sentinel est un système léger de supervision de sécurité de type SOC, accompagné d'un moteur d'analyse permettant d'examiner les journaux d'authentification Linux/SSH (`auth.log`), de détecter les attaques par force brute à l'aide d'un algorithme à fenêtre glissante, de calculer dynamiquement le niveau de risque associé à chaque adresse IP et de présenter les résultats dans un tableau de bord interactif en mode sombre.
 
 ---
 
-## 🏗️ Architecture
+## Fonctionnalités
+
+- **Analyse des journaux d'authentification SSH** : extrait les événements de connexion réussie, échouée et les tentatives utilisant des utilisateurs invalides, avec les informations relatives au port et à l'adresse IP.
+
+- **Stockage SQLite idempotent** : garantit l'absence de doublons dans les logs et les alertes lors des exécutions répétées du programme.
+
+- **Moteur de calcul du risque** : évalue le niveau de menace d'une adresse IP selon le nombre de tentatives de connexion échouées. Les niveaux sont : LOW, MEDIUM, HIGH et CRITICAL.
+
+- **Détection des attaques par force brute avec fenêtre glissante** : analyse des fenêtres temporelles de 5 minutes afin d'identifier les adresses IP ayant effectué au moins 5 tentatives de connexion échouées.
+
+- **Tableau de bord interactif de supervision** : interface de type SOC développée avec Streamlit et Plotly, permettant de visualiser l'état de sécurité du système.
+
+- **Investigation des adresses IP** : permet de sélectionner une adresse IP afin d'obtenir une analyse détaillée de son activité et de consulter sa chronologie.
+
+- **Explorateur de logs** : tableau structuré permettant de filtrer les événements selon plusieurs critères, notamment l'adresse IP, le nom d'utilisateur et le statut de connexion.
+
+- **Suite de tests unitaires** : tests réalisés avec Pytest pour vérifier l'analyse des logs, le calcul du risque, la détection des attaques par force brute et l'idempotence de la base de données.
+
+---
+
+## Architecture
 
 ```text
 auth.log
-   ↓
-Parser (parser.py)
-   ↓
-SQLite Database (security_logs.db)
-   ↓
-IP Statistics (statistics.py)
-   ↓
-Brute Force Detection (detector.py)
-   ↓
-Risk Scoring (risk_scoring.py)
-   ↓
-Security Alerts (alerts.py)
-   ↓
-Cyber Sentinel SOC Dashboard (dashboard/app.py)
-```
-
----
-
-## 📊 Risk Scoring Matrix
-
-| Failed Attempts | Risk Score | Risk Level | Threat Category |
-| :--- | :---: | :---: | :--- |
-| **$< 3$ attempts** | `10` | `LOW` | Standard activity / minor errors |
-| **$3 - 4$ attempts** | `40` | `MEDIUM` | Suspicious activity |
-| **$5 - 9$ attempts** | `70` | `HIGH` | Potential Brute Force |
-| **$\ge 10$ attempts** | `100` | `CRITICAL` | Severe Brute Force Attack |
-
----
-
-## ⚡ Brute Force Detection Rule
-
-- **Window Size**: 5 minutes (`WINDOW_MINUTES = 5`)
-- **Threshold**: 5 failed authentication attempts (`FAILED_THRESHOLD = 5`)
-- **Trigger**: If an IP records $\ge 5$ failed login attempts within any 5-minute sliding window, a `BRUTE FORCE DETECTED` security alert is generated and stored in SQLite.
-
----
-
-## 🚀 Installation & Setup
-
-1. **Clone or navigate to the repository:**
-   ```bash
-   cd cybersecurity-log-analyzer
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
----
-
-## 💻 Usage
-
-### 1. Run Backend Analysis Pipeline
-To execute log parsing, database storage, risk calculation, and threat detection via CLI:
-```bash
-python main.py
-```
-
-### 2. Launch Cyber Sentinel SOC Dashboard
-To start the interactive web application:
-```bash
-streamlit run dashboard/app.py
-```
-
----
-
-## 🧪 Running Unit Tests
-
-Run the Pytest suite to verify parser, scoring, detection, and database logic:
-```bash
-pytest -v
-```
+   |
+   v
+Analyseur de logs (parser.py)
+   |
+   v
+Base de données SQLite (security_logs.db)
+   |
+   v
+Statistiques par IP (statistics.py)
+   |
+   v
+Détection de force brute (detector.py)
+   |
+   v
+Calcul du risque (risk_scoring.py)
+   |
+   v
+Alertes de sécurité (alerts.py)
+   |
+   v
+Tableau de bord Cyber Sentinel (dashboard/app.py)
